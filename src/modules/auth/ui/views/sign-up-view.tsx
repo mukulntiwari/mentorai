@@ -8,12 +8,13 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import { Input } from "@/components/ui/input";
 import React from "react";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Form, FormControl, FormField,FormItem,FormLabel,FormMessage, useFormField } from "@/components/ui/form";
 import { Alert,AlertTitle } from "@/components/ui/alert";
-import { fa } from "zod/v4/locales";
+import { useRouter } from "next/navigation";
+import { FaGithub, FaGoogle } from "react-icons/fa";
+
 
 
 const formSchema = z.object({
@@ -51,6 +52,7 @@ export const SignUpView = () => {
             name: data.name,
             email: data.email,
             password: data.password,
+            callbackURL:"/",
         },
         {
             onSuccess: () => {
@@ -58,6 +60,27 @@ export const SignUpView = () => {
                 router.push("/");
             },
             onError: ({error}) => {
+                setPending(false);
+                setError(error.message);
+            }
+        });
+        
+    }
+
+    const onSocial = (provider: "github" | "google") => {
+        setError(null);
+        setPending(true);
+
+        authClient.signIn.social({
+            provider:provider,
+            callbackURL:"/",
+        },
+        {
+            onSuccess: () => {
+                setPending(false);
+            },
+            onError: ({error}) => {
+                setPending(false);
                 setError(error.message);
             }
         });
@@ -159,7 +182,7 @@ export const SignUpView = () => {
                     </Alert>
                 )}
                 <Button disabled={pending} type="submit" className="w-full">
-                    Sign In
+                    Sign Up
                 </Button>
                 <div className="after:border-border relative text-center text-sm after:absolute after:top-1/2 after:inset-0 after:z-0 after:flex after:items-center after:border-t">
                     <span className="bg-card px-2 z-10 relative text-muted-foreground">
@@ -167,11 +190,23 @@ export const SignUpView = () => {
                     </span>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                    <Button disabled={pending} variant="outline" className="w-full" type="button">
-                        Google
+                    <Button 
+                    disabled={pending} 
+                    onClick={() => onSocial("google")}
+                    variant="outline" 
+                    className="w-full" 
+                    type="button"
+                    >
+                        <FaGoogle />
                     </Button>
-                    <Button disabled={pending} variant="outline" className="w-full" type="button">
-                        Github
+                    <Button 
+                    disabled={pending} 
+                    onClick={() => onSocial("github")}
+                    variant="outline" 
+                    className="w-full" 
+                    type="button"
+                    >
+                        <FaGithub />
                     </Button>
                 </div>
                 <div className="text-sm text-center">
@@ -194,7 +229,7 @@ export const SignUpView = () => {
       </CardContent>
     </Card>
     <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-            By clicking "Sign In" you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
+            By clicking "Sign Up" you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
     </div>
     </div>
   );
