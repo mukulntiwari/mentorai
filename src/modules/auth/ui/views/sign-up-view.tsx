@@ -216,7 +216,7 @@ export const SignUpView = () => {
           </form>
         </Form>
 
-        <div className="bg-radial from-orange-400 to-orange-700 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
+        <div className="bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center">
             <img
                 src="/logo.svg"
                 alt="MentorAi Logo"
