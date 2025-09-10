@@ -13,8 +13,6 @@ const Page = async () => {
     }
   
 
-  return (
-    <SignInView />
-  );
+  return <SignInView />
 }
 export default Page;
