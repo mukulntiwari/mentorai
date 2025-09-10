@@ -78,6 +78,7 @@ export const SignUpView = () => {
         {
             onSuccess: () => {
                 setPending(false);
+
             },
             onError: ({error}) => {
                 setPending(false);
